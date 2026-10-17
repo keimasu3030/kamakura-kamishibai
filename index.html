@@ -96,6 +96,7 @@ function render(A,B,t,back){
   const e2=p.getPointAtLength(Math.max(0,L*f-1));const ang=Math.atan2(pt.y-e2.y,pt.x-e2.x);
   g.querySelector('.hd').setAttribute('d',`M${pt.x+Math.cos(ang)*12},${pt.y+Math.sin(ang)*12}L${pt.x+Math.cos(ang+2.5)*12},${pt.y+Math.sin(ang+2.5)*12}L${pt.x+Math.cos(ang-2.5)*12},${pt.y+Math.sin(ang-2.5)*12}Z`);
   const m=pts[Math.floor((pts.length-1)/2)],m2=pts[Math.floor((pts.length-1)/2)+1]||m;const tx=g.querySelector('text');let lx=(m[0]+m2[0])/2+10,ly=(m[1]+m2[1])/2-12;if(ar.lp)[lx,ly]=scr(ar.lp[0],ar.lp[1]);tx.setAttribute('x',lx);tx.setAttribute('y',ly);tx.style.opacity=f>.6?1:0}
+ for(const k in arrs)if(!ida.has(k)&&!idb.has(k))arrs[k].style.opacity=0;
 }
 function text(P,on){$('#yr').textContent=P.yr;$('#ep').textContent=P.ep;$('#ttl').textContent=P.ttl;$('#txt').textContent=P.txt;document.querySelectorAll('.fade').forEach((e,i)=>{e.style.transitionDelay=on?(i*1.92)+'s':'0s';e.classList.toggle('on',on)})}
 let mode='ready',pA=null,pB=null,pBack=false,el=0,last=0,chgShown=false;const D=28800,CHG_AT=1-6400/D;
@@ -117,7 +118,7 @@ function play(){if(mode!='armed'&&mode!='pause')return;mode='run';last=performan
 function pause(){if(mode!='run')return;cancelAnimationFrame(anim);mode='pause';document.body.classList.add('paused');ui()}
 function resume(){if(mode!='pause')return;document.body.classList.remove('paused');play()}
 function rewind(){cancelAnimationFrame(anim);document.body.classList.remove('paused');document.body.classList.add('noanim');el=0;render(pA,pB,0,pBack);setChg(pA,true);mode='armed';ui();requestAnimationFrame(()=>requestAnimationFrame(()=>document.body.classList.remove('noanim')))}
-function back(){if(mode=='run'||mode=='pause'){rewind();return}if(cur==0)return;cancelAnimationFrame(anim);cur=cur-1;const B=PAGES[cur];$('#no').textContent=(cur+1)+' / '+PAGES.length;text(B,true);render(B,B,1,false);setChg(B,true);mode='ready';ui()}
+function back(){if(mode=='run'||mode=='pause'){rewind();return}if(cur==0)return;cancelAnimationFrame(anim);document.body.classList.remove('paused');document.body.classList.add('noanim');void document.body.offsetWidth;cur=cur-1;const B=PAGES[cur];$('#no').textContent=(cur+1)+' / '+PAGES.length;text(B,true);render(B,B,1,false);setChg(B,true);mode='ready';ui();void document.body.offsetWidth;requestAnimationFrame(()=>requestAnimationFrame(()=>document.body.classList.remove('noanim')))}
 function finish(){cancelAnimationFrame(anim);document.body.classList.remove('paused');document.body.classList.add('noanim');render(pB,pB,1,false);setChg(pB,true);mode='ready';ui();requestAnimationFrame(()=>requestAnimationFrame(()=>document.body.classList.remove('noanim')))}
 function fwdKey(){if(mode=='run'||mode=='pause')finish();else fwd()}
 function fwd(){if(mode=='armed')play();else if(mode=='pause')resume();else if(mode=='ready')go(cur+1)}
